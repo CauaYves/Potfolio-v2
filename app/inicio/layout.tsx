@@ -1,18 +1,17 @@
 "use client";
-
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<div>
-			<ThemeProvider
+			<NextThemesProvider
 				attribute="class"
 				defaultTheme="system"
 				enableSystem
 				disableTransitionOnChange
 			>
 				{children}
-			</ThemeProvider>
+			</NextThemesProvider>
 		</div>
 	);
 }

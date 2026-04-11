@@ -15,6 +15,10 @@ import { useEffect, useState } from "react";
 export default function Home() {
 	const { theme } = useTheme();
 	const [showGooey, setShowGooey] = useState(true);
+	const [a, b] = useState(false);
+
+	const nome = "Fabio";
+	const ano = 2025;
 
 	useEffect(() => {
 		const timer = setTimeout(() => setShowGooey(false), 20000);

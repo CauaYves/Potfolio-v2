@@ -13,14 +13,14 @@ datasource db {
 }
 
 model Register {
-  id          Int     @id
+  id          Int     @id @default(autoincrement())
   period      String? @db.VarChar(48)
   description String?
   images      Image[]
 }
 
 model Image {
-  id         Int    @id
+  id         Int    @id @default(autoincrement())
   registerId Int?
   data       Bytes?
 

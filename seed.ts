@@ -1,23 +1,32 @@
-import { prisma } from "./lib/prisma";
+import "dotenv/config";
+import { pool } from "./lib/db";
 
 async function main() {
-  await prisma.register.createMany({
-    data: [
-      {
-        period: "2024 - 2025",
-        description: "Trabalhei como líder técnico de desenvolvimento frontend na construção do novo Portal para os clubes e parques do Brasil. Alguns clientes finais foram: Flamengo, Palmeiras e Aldeia das águas."
-      },
-      {
-        period: "Early 2023",
-        description: "Desenvolvimento e integração de novos sistemas no núcleo Multiclubes. Implementação de lógicas complexas e layouts arrojados."
-      },
-      {
-        period: "2022",
-        description: "Estudos intensivos de Typescript, React e introdução aos bancos de dados relacionais."
-      }
-    ]
-  });
-  console.log("Seed concluída");
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    await client.query(
+      `INSERT INTO "Register" (period, description) VALUES ($1, $2), ($3, $4), ($5, $6)`,
+      [
+        "2024 - 2025",
+        "Trabalhei como líder técnico de desenvolvimento frontend na construção do novo Portal para os clubes e parques do Brasil. Alguns clientes finais foram: Flamengo, Palmeiras e Aldeia das águas.",
+        "Early 2023",
+        "Desenvolvimento e integração de novos sistemas no núcleo Multiclubes. Implementação de lógicas complexas e layouts arrojados.",
+        "2022",
+        "Estudos intensivos de Typescript, React e introdução aos bancos de dados relacionais.",
+      ]
+    );
+
+    await client.query("COMMIT");
+    console.log("Seed concluída");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+    await pool.end();
+  }
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect());
+main().catch(console.error);
